@@ -10,10 +10,10 @@ namespace AddressBook.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AddressController : ControllerBase
+    public class AddressesController : ControllerBase
     {
          private IAddressService AddressService { get; }
-        public AddressController(IAddressService addressService)
+        public AddressesController(IAddressService addressService)
         {
             AddressService = addressService;
         }
@@ -31,5 +31,22 @@ namespace AddressBook.Api.Controllers
 
             }
         }
+
+        [Route("Groups")]
+        [HttpGet]
+        public async Task<IActionResult> AddressGroups()
+        {
+            try
+            {
+                var results = await AddressService.GetAddrerssGroups();
+                return Ok(results);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+
+            }
+        }
+
     }
 }

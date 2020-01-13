@@ -45,9 +45,24 @@ namespace AddressBook.Tests
             var data = await repo.GetAddresses();
             var movedRecord = data.ElementAt(3).city;
             Assert.Equal("New York", movedRecord);
-
         }
 
+        [Fact]
+        public async Task AddressGroups_Test()
+        {
+            var hostingEnvironment = Mock.Of<IWebHostEnvironment>(e => e.ApplicationName == "Addressbook.Api" && e.ContentRootPath == "C:\\Users\\ankur\\source\\repos\\AddressBook.Api\\AddressBook.Api");
+            var inMemorySettings = new Dictionary<string, string> { { "data", "/Data/sampleData.json" } };
+
+
+            IConfiguration configuration = new ConfigurationBuilder()
+                                            .AddInMemoryCollection(inMemorySettings)
+                                            .Build();
+            var repo = new AddressService(configuration, hostingEnvironment);
+
+            var data = await repo.GetGroupedAddresses();
+            var movedRecord = data.ElementAt(3).city;
+            Assert.Equal("New York", movedRecord);
+        }
 
     }
 }

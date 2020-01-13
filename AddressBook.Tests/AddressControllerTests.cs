@@ -15,7 +15,7 @@ namespace AddressBook.Tests
   public  class AddressControllerTests
     {
         private readonly Mock<IAddressService> _mockRepo;
-        private readonly AddressController _controller;
+       
         public AddressControllerTests()
         {
             _mockRepo = new Mock<IAddressService>();
@@ -24,17 +24,16 @@ namespace AddressBook.Tests
         [Fact]
         public async  Task  GetsAddressReturnsCorrectValues_Test()
         {
-            var addresses = new List<Address> { new Address() { firstname = "a", city = "London"}, new Address {city = "New york", firstname = "b" } };
-           _mockRepo.Setup(repo => repo.GetAddresses())
-        .ReturnsAsync(addresses);
+              var addresses = new List<Address> { new Address() { firstname = "a", city = "London"}, new Address {city = "New york", firstname = "b" } };
+             _mockRepo.Setup(repo => repo.GetAddresses())
+             .ReturnsAsync(addresses);
 
-            var _controller = new AddressController(_mockRepo.Object);
+            var _controller = new AddressesController(_mockRepo.Object);
             var result = await _controller.Addresses();
 
             var vr = Assert.IsType<OkObjectResult>(result);
             var addreadResults = Assert.IsAssignableFrom<IEnumerable<Address>>(vr.Value);
-            Assert.Equal(2, addreadResults.Count());
-            
+            Assert.Equal(2, addreadResults.Count());            
         }
     }
 }

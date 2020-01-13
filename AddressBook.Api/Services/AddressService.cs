@@ -1,4 +1,5 @@
-﻿using AddressBook.Api.Services.Interfaces;
+﻿using AddressBook.Api.Models;
+using AddressBook.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -29,10 +30,25 @@ namespace AddressBook.Api.Services
                             GroupBy(a => a.city, StringComparer.CurrentCultureIgnoreCase).
                             SelectMany(group => group);              
                 }            
-        }
+        }   
+
         private string DataSourceFileName()
         {
             return    Environment.ContentRootPath + "/"+ Configuration["data"];
         }
+
+        public async Task <IEnumerable<GroupedAddresses>> GetAddrerssGroups()
+        {
+            using (var reader = new StreamReader(DataSourceFileName()))
+            {
+                string json = await reader.ReadToEndAsync();
+                var data = JsonConvert.DeserializeObject<IEnumerable<Address>>(json);
+                var groupedData = new List<Models.GroupedAddresses>();
+              return  data.GroupBy(a => a.city, StringComparer.CurrentCultureIgnoreCase).
+                    Select(group => new Models.GroupedAddresses { City = group.Key, Addresses = group.ToList() });
+                //data.GroupBy()
+                //return JsonConvert.DeserializeObject<IEnumerable<Address>>(json).GroupBy(a => a.city, StringComparer.CurrentCultureIgnoreCase).ToArray();
+            }
+}
     }
 }
